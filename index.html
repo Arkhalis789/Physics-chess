@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Custom chess variant</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <h1>Physics Chess</h1>
+
+  <div id="turnIndicator"></div>
+
+  <div id="board"></div>
+
+  <div id="controls">
+    <button onclick="undo()">Undo</button>
+    <button onclick="redo()">Redo</button>
+    <button onclick="setupBoard()">Reset</button>
+  </div>
+
+  <div id="supernovaControls">
+    <h2 id="supernovaMessage">Trigger Supernova Explosion?</h2>
+    <p id="supernovaWarning">This will destroy all pieces in a 2-square radius!</p>
+    <div class="button-group">
+      <button class="cancel-btn" onclick="cancelExplosion()">Cancel</button>
+      <button class="explode-btn" onclick="confirmExplosion()">EXPLODE</button>
+    </div>
+  </div>
+
+  <div id="promotionControls">
+    <h2>Promote Pawn</h2>
+    <p>Choose a piece to promote to:</p>
+    <div class="promotion-options">
+      <button class="promotion-option" onclick="choosePromotion('Queen')">Queen</button>
+      <button class="promotion-option" onclick="choosePromotion('Wormhole')">Wormhole</button>
+      <button class="promotion-option" onclick="choosePromotion('BlackHole')">Black Hole</button>
+      <button class="promotion-option" onclick="choosePromotion('WhiteHole')">White Hole</button>
+      <button class="promotion-option" onclick="choosePromotion('Fluctuator')">Fluctuator</button>
+      <button class="promotion-option" onclick="choosePromotion('Supernova')">Supernova</button>
+      <button class="promotion-option" onclick="choosePromotion('Photon')">Photon</button>
+    </div>
+  </div>
+
+  <div id="status"></div>
+
+  <!-- IMPORTANT: script goes last -->
+  <script src="script.js"></script>
+
+</body>
+</html>
