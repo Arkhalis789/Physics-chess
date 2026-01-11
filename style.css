@@ -395,3 +395,27 @@ button:active {
   border-radius: 10px;
   border: 2px solid #444;
 }
+
+#board-wrapper {
+  width: 100%;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+}
+
+#board {
+  transform-origin: top center;
+}
+
+/* Mobile scaling */
+@media (max-width: 800px) {
+  #board {
+    transform: scale(0.6);
+  }
+}
+
+@media (max-width: 500px) {
+  #board {
+    transform: scale(0.45);
+  }
+}
