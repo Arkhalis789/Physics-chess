@@ -598,7 +598,7 @@ function setupBoard() {
     };
     
     if (backRank[x] === pieces.Fluctuator) {
-      board[0][x].fluctuatorMode = 'rook';
+      board[0][x].fluctuatorMode = 'bishop';
     }
     
     board[1][x] = { type: pieces.Pawn, color: "Black", moved: false };
@@ -611,7 +611,7 @@ function setupBoard() {
     };
     
     if (backRank[x] === pieces.Fluctuator) {
-      board[SIZE - 1][x].fluctuatorMode = 'rook';
+      board[SIZE - 1][x].fluctuatorMode = 'bishop';
     }
   }
 
@@ -622,77 +622,113 @@ function setupBoard() {
 // ================= SVG ICONS =================
 function getPieceSVG(pieceType, color) {
   const isWhite = color === "White";
-  const fillColor = isWhite ? "#ffffff" : "#111111";
-  const strokeColor = isWhite ? "#000000" : "#ffffff";
-  const strokeWidth = 1.5;
-  
+  const fillColor = isWhite ? "#f5f5f5" : "#111111";
+  const strokeColor = isWhite ? "#111111" : "#f5f5f5";
+  const strokeWidth = 1.6;
+
   const baseStyle = `fill="${fillColor}" stroke="${strokeColor}" stroke-width="${strokeWidth}" stroke-linecap="round" stroke-linejoin="round"`;
-  
+
   const icons = {
+
     [pieces.Pawn]: `
-      <path d="M20,10 C20,6 25,6 25,10 C25,14 27,16 27,25 C27,32 18,32 18,25 C18,16 20,14 20,10 Z" ${baseStyle}/>
+      <path d="M20,10 C20,6 25,6 25,10 C25,14 27,16 27,25 C27,32 18,32 18,25 C18,16 20,14 20,10 Z" ${baseStyle}/> 
       <path d="M15,25 L30,25" stroke="${strokeColor}" stroke-width="2"/>
     `,
-    
-    [pieces.Wormhole]: `
-      <circle cx="22.5" cy="22.5" r="10" ${baseStyle}/>
-      <circle cx="22.5" cy="22.5" r="4" ${baseStyle} fill="transparent"/>
-      <path d="M22.5,12.5 L22.5,32.5 M12.5,22.5 L32.5,22.5" stroke="${strokeColor}" stroke-width="1.5"/>
-    `,
-    
-    [pieces.BlackHole]: `
-      <circle cx="22.5" cy="22.5" r="12" ${baseStyle}/>
-      <circle cx="22.5" cy="22.5" r="6" ${baseStyle} fill="${strokeColor}"/>
-      <circle cx="22.5" cy="22.5" r="3" ${baseStyle}/>
-    `,
-    
+
+    // WORMHOLE — SPIRAL (SWAPPED COLORS)
+[pieces.Wormhole]: `
+  <path d="M22.5 10
+           C30 10, 35 15, 35 22.5
+           C35 30, 30 35, 22.5 35
+           C15 35, 10 30, 10 22.5
+           C10 16, 15 12, 22.5 12
+           C27 12, 30 16, 30 22.5
+           C30 27, 27 30, 22.5 30"
+        fill="none"
+        stroke="${fillColor}"
+        stroke-width="2.8"/>
+  <circle cx="22.5" cy="22.5" r="2.8" fill="${fillColor}"/>
+`,
+
+   // BLACK HOLE — INWARD ARROWS (MOVED INWARD)
+[pieces.BlackHole]: `
+  <circle cx="22.5" cy="22.5" r="11" ${baseStyle}/>
+  <circle cx="22.5" cy="22.5" r="4" fill="${strokeColor}"/>
+
+  <!-- arrows -->
+  <path d="M22.5 14 L22.5 18
+           M22.5 31 L22.5 27
+           M14 22.5 L18 22.5
+           M31 22.5 L27 22.5"
+        stroke="${strokeColor}" stroke-width="2"/>
+
+  <path d="M20.5 16 L22.5 18 L24.5 16
+           M20.5 29 L22.5 27 L24.5 29
+           M16 20.5 L18 22.5 L16 24.5
+           M29 20.5 L27 22.5 L29 24.5"
+        fill="${strokeColor}"/>
+`,
+
+    // WHITE HOLE — OUTWARD ARROWS
     [pieces.WhiteHole]: `
-      <circle cx="22.5" cy="22.5" r="12" ${baseStyle}/>
-      <circle cx="22.5" cy="22.5" r="8" ${baseStyle} fill="transparent" stroke-dasharray="2,2"/>
-      <path d="M22.5,10.5 L22.5,34.5 M10.5,22.5 L34.5,22.5" stroke="${strokeColor}" stroke-width="1.5"/>
-    `,
-    
-    [pieces.Fluctuator]: `
-      <rect x="10" y="10" width="25" height="25" rx="3" ${baseStyle}/>
-      <path d="M15,22.5 L30,22.5 M22.5,15 L22.5,30" stroke="${strokeColor}" stroke-width="2"/>
-      <path d="M17,17 L20,20 M28,17 L25,20 M17,28 L20,25 M28,28 L25,25" stroke="${strokeColor}" stroke-width="1.5"/>
-    `,
-    
-    [pieces.Supernova]: `
-      <circle cx="22.5" cy="22.5" r="12" ${baseStyle}/>
-      <path d="M22.5,10.5 L22.5,34.5 M10.5,22.5 L34.5,22.5 M15,15 L30,30 M15,30 L30,15" 
+      <circle cx="22.5" cy="22.5" r="10" ${baseStyle}/>
+      <path d="M22.5 8 L22.5 2 M22.5 37 L22.5 43
+               M8 22.5 L2 22.5 M37 22.5 L43 22.5"
             stroke="${strokeColor}" stroke-width="2"/>
-      <circle cx="22.5" cy="22.5" r="4" fill="${strokeColor}"/>
+      <path d="M20 4 L22.5 2 L25 4
+               M20 41 L22.5 43 L25 41
+               M4 20 L2 22.5 L4 25
+               M41 20 L43 22.5 L41 25"
+            fill="${strokeColor}"/>
     `,
-    
-    [pieces.Photon]: `
-      <path d="M10,22.5 C13,18 18,27 22.5,22.5 C27,18 32,27 35,22.5" 
-            stroke="${strokeColor}" stroke-width="3" fill="none"/>
-      <circle cx="22.5" cy="22.5" r="5" ${baseStyle}/>
-      <circle cx="22.5" cy="22.5" r="2" fill="${strokeColor}"/>
+
+   // FLUCTUATOR — NORMAL COLORS
+[pieces.Fluctuator]: `
+  <circle cx="15" cy="22.5" r="5" fill="${fillColor}" stroke="${strokeColor}" stroke-width="1.5"/>
+  <circle cx="22.5" cy="15" r="5" fill="${fillColor}" stroke="${strokeColor}" stroke-width="1.5"/>
+  <circle cx="30" cy="22.5" r="5" fill="${fillColor}" stroke="${strokeColor}" stroke-width="1.5"/>
+  <path d="M15 22.5 L22.5 15 L30 22.5"
+        stroke="${strokeColor}" stroke-width="2" fill="none"/>
+`,
+
+    // SUPERNOVA — STAR
+    [pieces.Supernova]: `
+      <path d="M22.5 6 L25.5 17 L36 22.5
+               L25.5 28 L22.5 39
+               L19.5 28 L9 22.5
+               L19.5 17 Z"
+            ${baseStyle}/>
+      <circle cx="22.5" cy="22.5" r="3" fill="${strokeColor}"/>
     `,
-    
+
+   // PHOTON — COLORS SWAPPED
+[pieces.Photon]: `
+  <path d="M10,22.5 C13,18 18,27 22.5,22.5 C27,18 32,27 35,22.5"
+        stroke="${fillColor}" stroke-width="3" fill="none"/>
+  <circle cx="22.5" cy="22.5" r="5"
+          fill="${strokeColor}" stroke="${fillColor}" stroke-width="2"/>
+  <circle cx="22.5" cy="22.5" r="2" fill="${fillColor}"/>
+`,
+
     [pieces.Queen]: `
-      <path d="M22.5,10 L27,20 L35,22 L30,30 L27,35 L18,35 L15,30 L10,22 L18,20 Z" ${baseStyle}/>
+      <path d="M22.5,10 L27,20 L35,22 L30,30 L27,35 L18,35 L15,30 L10,22 L18,20 Z" ${baseStyle}/> 
       <circle cx="22.5" cy="12" r="2" fill="${strokeColor}"/>
-      <circle cx="17" cy="16" r="1.5" fill="${strokeColor}"/>
+      <circle cx="17" cy="16" r="1.5" fill="${strokeColor}"/> 
       <circle cx="28" cy="16" r="1.5" fill="${strokeColor}"/>
     `,
-    
+
     [pieces.King]: `
       <path d="M22.5,10 L27,20 L35,22 L30,30 L27,35 L18,35 L15,30 L10,22 L18,20 Z" ${baseStyle}/>
-      <path d="M22.5,7 L22.5,10 M20,8 L25,8" stroke="${strokeColor}" stroke-width="2"/>
+      <path d="M22.5,7 L22.5,10 M20,8 L25,8" stroke="${strokeColor}" stroke-width="2"/> 
       <rect x="20" y="25" width="5" height="10" ${baseStyle} fill="${strokeColor}"/>
     `
   };
-  
-  const svg = `
+
+  return `
     <svg width="45" height="45" viewBox="0 0 45 45" xmlns="http://www.w3.org/2000/svg">
-      ${icons[pieceType] || `<text x="22.5" y="22.5" text-anchor="middle" fill="${strokeColor}" font-size="14">${pieceType}</text>`}
+      ${icons[pieceType]}
     </svg>
   `;
-  
-  return svg;
 }
 
 // ================= RENDER =================
@@ -1025,7 +1061,7 @@ function getRawMoves(r, c, p) {
     case pieces.Pawn: return pawnMoves(r, c, p);
     case pieces.Wormhole: return knight(r, c, p.color);
     case pieces.Fluctuator: return getFluctuatorMoves(r, c, p);
-    case pieces.Supernova: return king(r, c, p.color, false);
+    case pieces.Supernova: return supernovaMoves(r, c, p); // Changed this line
     case pieces.King: return king(r, c, p.color, true);
     case pieces.BlackHole:
     case pieces.WhiteHole: return slide(r, c, p.color, rookDirs, p.type);
@@ -1137,6 +1173,16 @@ if (
     }
   }
   return m;
+}
+
+function supernovaMoves(r, c, piece) {
+  // If the Supernova hasn't moved yet, it can move like a knight
+  if (!piece.moved) {
+    return knight(r, c, piece.color);
+  } else {
+    // After moving, it moves like a king
+    return king(r, c, piece.color, false);
+  }
 }
 
 // ================= CHECK =================
