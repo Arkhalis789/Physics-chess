@@ -57,6 +57,17 @@ function getFluctuatorMoves(r, c, piece) {
         if (!inBounds(nr, nc)) break;
         
         const targetSquare = board[nr][nc];
+        
+        // Check if this is an adjacent friendly wormhole
+        if (d === 1 && targetSquare && 
+            targetSquare.type === pieces.Wormhole && 
+            targetSquare.color === piece.color &&
+            canUseTeleportation(pieces.Fluctuator)) {
+          // Add wormhole square for teleportation
+          moves.push({ r: nr, c: nc });
+          break;
+        }
+        
         if (targetSquare) {
           if (targetSquare.color !== piece.color) {
             moves.push({ r: nr, c: nc });
@@ -75,6 +86,17 @@ function getFluctuatorMoves(r, c, piece) {
         if (!inBounds(nr, nc)) break;
         
         const targetSquare = board[nr][nc];
+        
+        // Check if this is an adjacent friendly wormhole
+        if (d === 1 && targetSquare && 
+            targetSquare.type === pieces.Wormhole && 
+            targetSquare.color === piece.color &&
+            canUseTeleportation(pieces.Fluctuator)) {
+          // Add wormhole square for teleportation
+          moves.push({ r: nr, c: nc });
+          break;
+        }
+        
         if (targetSquare) {
           if (targetSquare.color !== piece.color) {
             moves.push({ r: nr, c: nc });
@@ -89,6 +111,12 @@ function getFluctuatorMoves(r, c, piece) {
   return moves;
 }
 
+// Also need to add Fluctuator to canUseTeleportation:
+function canUseTeleportation(pieceType) {
+  const teleportablePieces = [pieces.Queen, pieces.Wormhole, pieces.BlackHole, 
+                             pieces.WhiteHole, pieces.Photon, pieces.Fluctuator]; // Added Fluctuator
+  return teleportablePieces.includes(pieceType);
+}
 function toggleFluctuatorMode(piece) {
   if (piece.type === pieces.Fluctuator) {
     piece.fluctuatorMode = piece.fluctuatorMode === 'rook' ? 'bishop' : 'rook';
@@ -396,10 +424,11 @@ function getWormholes(color = null) {
 
 function canUseTeleportation(pieceType) {
   const teleportablePieces = [pieces.Queen, pieces.Wormhole, pieces.BlackHole, 
-                             pieces.WhiteHole, pieces.Photon];
+                             pieces.WhiteHole, pieces.Photon, pieces.Fluctuator]; // ADDED FLUCTUATOR
   return teleportablePieces.includes(pieceType);
 }
 
+// ... rest of the code remains the same ...
 function getDirectionToWormhole(piecePos, wormholePos) {
   const dr = wormholePos.r - piecePos.r;
   const dc = wormholePos.c - piecePos.c;
@@ -512,6 +541,9 @@ function choosePromotion(pieceType) {
   promotionPending = null;
   promotionControls.classList.remove("active");
   
+  // SWITCH TURN AFTER PROMOTION (this was missing!)
+  currentTurn = opponent(currentTurn);
+  
   // Check for check/checkmate after promotion
   if (isKingInCheck(currentTurn)) {
     if (!hasAnyLegalMove(currentTurn)) {
@@ -520,6 +552,8 @@ function choosePromotion(pieceType) {
     } else {
       statusText.textContent = `${currentTurn} is in check`;
     }
+  } else {
+    statusText.textContent = "";
   }
   
   updateTurnText();
