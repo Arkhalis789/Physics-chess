@@ -44,7 +44,7 @@ const arrows = {
 const pieceInfo = {
   [pieces.Pawn]: {
     name: "Pawn",
-    description: "The basic infantry unit. Moves forward one square, but can move two squares on its first move. Captures diagonally. Can promote to any other piece when reaching the opposite side of the board.",
+    description: "The basic infantry unit. Moves forward one square, but can move two squares on its first move. Captures diagonally. Can promote to any other piece except the king when reaching the opposite side of the board.",
     moves: [
       "Moves forward 1 square",
       "On first move, can move forward 2 squares",
@@ -122,7 +122,7 @@ const pieceInfo = {
       "Toggles mode after each move",
       "Current mode shown as R/B indicator",
       "Can teleport through wormholes",
-      "Affected by black/white holes"
+      "Affected by enemy black/white holes"
     ],
     tips: [
       "Switch modes strategically for attacks",
@@ -152,19 +152,17 @@ const pieceInfo = {
   
   [pieces.Photon]: {
     name: "Photon",
-    description: "A light particle that moves diagonally and reflects off board edges. Cannot be blocked by pieces except at reflection points. Blocked by white holes.",
+    description: "A light particle that moves diagonally and reflects off board edges. Vision blocked by white holes.",
     moves: [
-      "Moves diagonally indefinitely",
+      "Moves diagonally",
       "Reflects off board edges (once)",
-      "Cannot be blocked mid-path",
-      "Only captures at reflection/stopping point",
       "Blocked by white holes"
     ],
     tips: [
       "Use board edges for unexpected angles",
       "Position to cover multiple diagonals",
       "Combine with other pieces for traps",
-      "Watch out for white holes"
+      "Watch out for enemy white/black holes"
     ]
   },
   
@@ -174,9 +172,8 @@ const pieceInfo = {
     moves: [
       "Moves like rook AND bishop",
       "Unlimited range in 8 directions",
-      "Immune to black/white holes",
+      "Immune to enemy black/white holes",
       "Can teleport through wormholes",
-      "Cannot be blocked by white holes"
     ],
     tips: [
       "Protect your Queen at all costs",
@@ -221,7 +218,7 @@ function showPieceInfo(piece) {
   if (!info) return;
   
   // Update header
-  document.getElementById("pieceName").textContent = `${piece.color} ${info.name}`;
+  document.getElementById("pieceName").textContent = info.name;
   
   // Update icon (using the piece's SVG)
   document.getElementById("pieceIcon").innerHTML = getPieceSVG(piece.type, piece.color);
@@ -254,23 +251,55 @@ function showPieceInfo(piece) {
 function updatePieceImages(pieceType) {
   const imagesContainer = document.getElementById("pieceImages");
   imagesContainer.innerHTML = "";
-  
+ 
   // Example: Add placeholder images (replace with your actual images)
   // You would replace these with your actual image URLs
   const imageTemplates = {
-    [pieces.Pawn]: [
-      {url: "images/pawn_movement.png", alt: "Pawn Movement"},
-      {url: "images/pawn_capture.png", alt: "Pawn Capture"}
-    ],
     [pieces.Wormhole]: [
-      {url: "images/wormhole_teleport.png", alt: "Wormhole Teleportation"},
-      {url: "images/wormhole_network.png", alt: "Wormhole Network"}
+      {url: "./images/wormhole.png", alt: "Wormhole Teleportation"},
+      {url: "./images/wormhole_many.png", alt: "Wormhole Network"}
     ],
+  [pieces.BlackHole]: [
+      {url: "./images/black_hole_effect.png", alt: "Wormhole Teleportation"},
+    ],
+  [pieces.WhiteHole]: [
+      {url: "./images/white_hole_effect.png", alt: "Wormhole Teleportation"},
+    ],
+  [pieces.Fluctuator]: [
+      {url: "./images/fluctuator_rook_mode.png", alt: "Wormhole Teleportation"},
+      {url: "./images/fluctuator_bishop_mode.png", alt: "Wormhole Network"}
+    ],
+  [pieces.Supernova]: [
+      {url: "./images/supernova_trigger.png", alt: "Wormhole Teleportation"},
+      {url: "./images/supernova_explosion.png", alt: "Wormhole Network"}
+    ],
+[pieces.Photon]: [
+      {url: "./images/photon.png", alt: "Wormhole Teleportation"},
+    ],
+[pieces.Queen]: [
+      {url: "./images/queen.png", alt: "Wormhole Teleportation"},
+    ],
+
     // Add more for other pieces...
   };
   
-  const images = imageTemplates[pieceType] || [];
+   const images = imageTemplates[pieceType] || [];
   
+  // If no images, show helpful message
+  if (images.length === 0) {
+    imagesContainer.innerHTML = `
+      <div class="piece-image-placeholder">
+        <div class="icon">📷</div>
+        <div class="text">
+          <p>No images available for this piece</p>
+          <p><small>Add screenshots to the 'images' folder</small></p>
+        </div>
+      </div>
+    `;
+    return;
+  }
+  
+  // Create image elements
   images.forEach(img => {
     const div = document.createElement("div");
     div.className = "piece-image";
@@ -278,27 +307,24 @@ function updatePieceImages(pieceType) {
     const imgElement = document.createElement("img");
     imgElement.src = img.url;
     imgElement.alt = img.alt;
+    imgElement.title = img.alt; // Tooltip
+    
+    // Handle missing images
     imgElement.onerror = function() {
-      // If image doesn't exist, show placeholder
       this.style.display = "none";
-      div.innerHTML = `<div style="background:#333;height:120px;display:flex;align-items:center;justify-content:center;color:#666;font-style:italic;">${img.alt}<br><small>(Image placeholder)</small></div>`;
+      div.className = "piece-image-placeholder";
+      div.innerHTML = `
+        <div class="icon">📷</div>
+        <div class="text">
+          <p>${img.alt}</p>
+          <p><small>Image not found: ${img.url}</small></p>
+        </div>
+      `;
     };
     
     div.appendChild(imgElement);
     imagesContainer.appendChild(div);
   });
-  
-  // If no images, show message
-  if (images.length === 0) {
-    imagesContainer.innerHTML = `
-      <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #888; font-style: italic;">
-        <p>To add images for this piece:</p>
-        <p>1. Create an "images" folder in your project</p>
-        <p>2. Add PNG files named like "${pieceType.toLowerCase()}_movement.png"</p>
-        <p>3. Update the imageTemplates object in showPieceInfo() function</p>
-      </div>
-    `;
-  }
 }
 
 // ================= FLUCTUATOR =================

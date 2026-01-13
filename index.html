@@ -12,8 +12,9 @@
 
   <div id="turnIndicator"></div>
 
-  <!-- NEW: Container for board and info panel -->
+  <!-- NEW: Container for board and panels -->
   <div id="game-container">
+    <!-- Left panel: Piece information -->
     <div id="pieceInfoPanel">
       <div id="pieceInfoHeader">
         <h2 id="pieceName">Select a Piece</h2>
@@ -29,12 +30,18 @@
           <h3>Tips & Strategy</h3>
           <ul id="pieceTipsList"></ul>
         </div>
-        <div id="pieceImages"></div>
       </div>
     </div>
 
+    <!-- Center: Game board -->
     <div id="board-wrapper">
       <div id="board"></div>
+    </div>
+
+    <!-- Right panel: Large images -->
+    <div id="imagesPanel">
+      <h2>Visual Examples</h2>
+      <div id="pieceImages"></div>
     </div>
   </div>
 
@@ -71,7 +78,7 @@
   <div id="status"></div>
 
   <!-- IMPORTANT: script goes last -->
-  <script src="script.js?v=1"></script>
+  <script src="script.js"></script>
 
 </body>
 </html>
