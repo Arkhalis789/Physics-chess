@@ -40,6 +40,267 @@ const arrows = {
   "-1,-1": "↖"
 };
 
+// ================= PIECE INFORMATION =================
+const pieceInfo = {
+  [pieces.Pawn]: {
+    name: "Pawn",
+    description: "The basic infantry unit. Moves forward one square, but can move two squares on its first move. Captures diagonally. Can promote to any other piece when reaching the opposite side of the board.",
+    moves: [
+      "Moves forward 1 square",
+      "On first move, can move forward 2 squares",
+      "Captures diagonally 1 square",
+      "En passant capture available",
+      "Promotes upon reaching enemy back rank"
+    ],
+    tips: [
+      "Use pawns to control center squares",
+      "Create pawn chains for defense",
+      "Keep pawn structure intact for endgame",
+      "Promote to Queen in most situations"
+    ]
+  },
+  
+  [pieces.Wormhole]: {
+    name: "Wormhole",
+    description: "A spacetime anomaly that moves like a knight. Adjacent friendly pieces can teleport through wormhole networks to exit squares near other friendly wormholes.",
+    moves: [
+      "Moves like a knight (L-shape)",
+      "Creates teleportation network",
+      "Adjacent friendly pieces can teleport",
+      "Teleport requires clear exit square",
+      "Cannot teleport through enemy white holes (except Queen)"
+    ],
+    tips: [
+      "Position wormholes to create teleportation chains",
+      "Protect your wormholes to maintain mobility",
+      "Use wormholes for surprise attacks",
+      "Connect wormholes across the board"
+    ]
+  },
+  
+  [pieces.BlackHole]: {
+    name: "Black Hole",
+    description: "A gravitational singularity that pulls pieces toward it. Enemy pieces adjacent to a black hole cannot move away from it, unless they are immune (King/Queen).",
+    moves: [
+      "Moves like a rook (horizontal/vertical)",
+      "Creates gravitational field (1-square radius)",
+      "Enemy pieces in field cannot move away",
+      "Immune pieces: King and Queen",
+      "Does not affect pieces on black hole square"
+    ],
+    tips: [
+      "Place black holes to trap enemy pieces",
+      "Combine with other pieces for captures",
+      "Use to restrict enemy movement",
+      "Protect with pawns and other pieces"
+    ]
+  },
+  
+  [pieces.WhiteHole]: {
+    name: "White Hole",
+    description: "The opposite of a black hole - repels matter. Enemy pieces cannot enter squares adjacent to a white hole, unless they are immune (King/Queen). Blocks line of sight for ranged pieces.",
+    moves: [
+      "Moves like a rook (horizontal/vertical)",
+      "Creates repulsion field (1-square radius)",
+      "Enemy pieces cannot enter field",
+      "Blocks enemy ranged piece vision",
+      "Immune pieces: King and Queen"
+    ],
+    tips: [
+      "Use to block enemy advancement",
+      "Position near your king for defense",
+      "Block enemy bishops, rooks, and photons",
+      "Create no-go zones for enemy pieces"
+    ]
+  },
+  
+  [pieces.Fluctuator]: {
+    name: "Fluctuator",
+    description: "A quantum piece that oscillates between rook and bishop movement patterns. Toggles between the two modes after each move. Can teleport through wormholes.",
+    moves: [
+      "Moves 2 squares as rook OR bishop",
+      "Toggles mode after each move",
+      "Current mode shown as R/B indicator",
+      "Can teleport through wormholes",
+      "Affected by black/white holes"
+    ],
+    tips: [
+      "Switch modes strategically for attacks",
+      "Use wormhole teleportation for mobility",
+      "Position to exploit enemy weaknesses",
+      "Combine both movement patterns"
+    ]
+  },
+  
+  [pieces.Supernova]: {
+    name: "Supernova",
+    description: "A massive star that can explode spectacularly. Moves like a knight on first move, then like a king. Can detonate in a star-shaped pattern, destroying all pieces in radius including itself (except friendly King).",
+    moves: [
+      "First move: knight movement",
+      "Subsequent moves: king movement",
+      "Can explode in star pattern (2-range)",
+      "Destroys all pieces in explosion radius",
+      "Cannot explode if friendly King in radius"
+    ],
+    tips: [
+      "Use explosion to clear enemy clusters",
+      "Sacrifice for strategic advantage",
+      "Keep away from your own King",
+      "Time explosion for maximum impact"
+    ]
+  },
+  
+  [pieces.Photon]: {
+    name: "Photon",
+    description: "A light particle that moves diagonally and reflects off board edges. Cannot be blocked by pieces except at reflection points. Blocked by white holes.",
+    moves: [
+      "Moves diagonally indefinitely",
+      "Reflects off board edges (once)",
+      "Cannot be blocked mid-path",
+      "Only captures at reflection/stopping point",
+      "Blocked by white holes"
+    ],
+    tips: [
+      "Use board edges for unexpected angles",
+      "Position to cover multiple diagonals",
+      "Combine with other pieces for traps",
+      "Watch out for white holes"
+    ]
+  },
+  
+  [pieces.Queen]: {
+    name: "Queen",
+    description: "The most powerful piece. Combines the movement of rook and bishop. Immune to both black and white hole effects. Can teleport through wormholes.",
+    moves: [
+      "Moves like rook AND bishop",
+      "Unlimited range in 8 directions",
+      "Immune to black/white holes",
+      "Can teleport through wormholes",
+      "Cannot be blocked by white holes"
+    ],
+    tips: [
+      "Protect your Queen at all costs",
+      "Use for both attack and defense",
+      "Teleport for surprise attacks",
+      "Combine with other pieces for checkmate"
+    ]
+  },
+  
+  [pieces.King]: {
+    name: "King",
+    description: "The most important piece. Game ends if captured. Moves one square in any direction. Must avoid enemy attacks and cannot move into check.",
+    moves: [
+      "Moves 1 square in any direction",
+      "Cannot move into check",
+      "Immune to black/white holes",
+      "Cannot approach enemy supernova explosion radius",
+      "Checkmate ends the game"
+    ],
+    tips: [
+      "Keep King safe at all times",
+      "Castle early for safety",
+      "Use pawns as shields",
+      "Activate King in endgame"
+    ]
+  }
+};
+
+// ================= INFO PANEL FUNCTIONS =================
+function showPieceInfo(piece) {
+  if (!piece) {
+    document.getElementById("pieceName").textContent = "Select a Piece";
+    document.getElementById("pieceIcon").innerHTML = "♟️";
+    document.getElementById("pieceDescription").textContent = "Click on any piece to see its description, movement rules, and special abilities here.";
+    document.getElementById("pieceMovesList").innerHTML = "";
+    document.getElementById("pieceTipsList").innerHTML = "";
+    document.getElementById("pieceImages").innerHTML = "";
+    return;
+  }
+  
+  const info = pieceInfo[piece.type];
+  if (!info) return;
+  
+  // Update header
+  document.getElementById("pieceName").textContent = `${piece.color} ${info.name}`;
+  
+  // Update icon (using the piece's SVG)
+  document.getElementById("pieceIcon").innerHTML = getPieceSVG(piece.type, piece.color);
+  
+  // Update description
+  document.getElementById("pieceDescription").textContent = info.description;
+  
+  // Update moves list
+  const movesList = document.getElementById("pieceMovesList");
+  movesList.innerHTML = "";
+  info.moves.forEach(move => {
+    const li = document.createElement("li");
+    li.textContent = move;
+    movesList.appendChild(li);
+  });
+  
+  // Update tips list
+  const tipsList = document.getElementById("pieceTipsList");
+  tipsList.innerHTML = "";
+  info.tips.forEach(tip => {
+    const li = document.createElement("li");
+    li.textContent = tip;
+    tipsList.appendChild(li);
+  });
+  
+  // Update images section (you can add your images here)
+  updatePieceImages(piece.type);
+}
+
+function updatePieceImages(pieceType) {
+  const imagesContainer = document.getElementById("pieceImages");
+  imagesContainer.innerHTML = "";
+  
+  // Example: Add placeholder images (replace with your actual images)
+  // You would replace these with your actual image URLs
+  const imageTemplates = {
+    [pieces.Pawn]: [
+      {url: "images/pawn_movement.png", alt: "Pawn Movement"},
+      {url: "images/pawn_capture.png", alt: "Pawn Capture"}
+    ],
+    [pieces.Wormhole]: [
+      {url: "images/wormhole_teleport.png", alt: "Wormhole Teleportation"},
+      {url: "images/wormhole_network.png", alt: "Wormhole Network"}
+    ],
+    // Add more for other pieces...
+  };
+  
+  const images = imageTemplates[pieceType] || [];
+  
+  images.forEach(img => {
+    const div = document.createElement("div");
+    div.className = "piece-image";
+    
+    const imgElement = document.createElement("img");
+    imgElement.src = img.url;
+    imgElement.alt = img.alt;
+    imgElement.onerror = function() {
+      // If image doesn't exist, show placeholder
+      this.style.display = "none";
+      div.innerHTML = `<div style="background:#333;height:120px;display:flex;align-items:center;justify-content:center;color:#666;font-style:italic;">${img.alt}<br><small>(Image placeholder)</small></div>`;
+    };
+    
+    div.appendChild(imgElement);
+    imagesContainer.appendChild(div);
+  });
+  
+  // If no images, show message
+  if (images.length === 0) {
+    imagesContainer.innerHTML = `
+      <div style="grid-column: 1 / -1; text-align: center; padding: 20px; color: #888; font-style: italic;">
+        <p>To add images for this piece:</p>
+        <p>1. Create an "images" folder in your project</p>
+        <p>2. Add PNG files named like "${pieceType.toLowerCase()}_movement.png"</p>
+        <p>3. Update the imageTemplates object in showPieceInfo() function</p>
+      </div>
+    `;
+  }
+}
+
 // ================= FLUCTUATOR =================
 function getFluctuatorMoves(r, c, piece) {
   if (!piece.fluctuatorMode) {
@@ -642,7 +903,9 @@ function setupBoard() {
 
   renderBoard();
   updateTurnText();
+  showPieceInfo(null); // NEW: Clear the info panel on reset
 }
+
 
 // ================= SVG ICONS =================
 function getPieceSVG(pieceType, color) {
@@ -840,8 +1103,13 @@ function onSquareClick(r, c) {
   const p = board[r][c];
 
   if (!selected) {
-    if (!p || p.color !== currentTurn) return;
+    if (!p || p.color !== currentTurn) {
+      // Show info even if it's not your turn
+      showPieceInfo(p);
+      return;
+    }
     selected = { r, c };
+    showPieceInfo(p); // NEW: Show info when selecting your piece
     renderBoard();
     showLegalMoves(r, c);
     return;
@@ -849,6 +1117,7 @@ function onSquareClick(r, c) {
 
   if (p && p.color === currentTurn && p.type !== pieces.Wormhole) {
     selected = { r, c };
+    showPieceInfo(p); // NEW: Show info when selecting another piece
     renderBoard();
     showLegalMoves(r, c);
     return;

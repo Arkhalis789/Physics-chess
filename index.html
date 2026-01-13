@@ -12,11 +12,33 @@
 
   <div id="turnIndicator"></div>
 
-  <div id="board-wrapper">
-  <div id="board"></div>
-</div>
+  <!-- NEW: Container for board and info panel -->
+  <div id="game-container">
+    <div id="pieceInfoPanel">
+      <div id="pieceInfoHeader">
+        <h2 id="pieceName">Select a Piece</h2>
+        <div id="pieceIcon"></div>
+      </div>
+      <div id="pieceInfoContent">
+        <p id="pieceDescription">Click on any piece to see its description, movement rules, and special abilities here.</p>
+        <div id="pieceMoves">
+          <h3>Movement & Abilities</h3>
+          <ul id="pieceMovesList"></ul>
+        </div>
+        <div id="pieceTips">
+          <h3>Tips & Strategy</h3>
+          <ul id="pieceTipsList"></ul>
+        </div>
+        <div id="pieceImages"></div>
+      </div>
+    </div>
 
+    <div id="board-wrapper">
+      <div id="board"></div>
+    </div>
+  </div>
 
+  <!-- Rest of your existing HTML remains the same -->
   <div id="controls">
     <button onclick="undo()">Undo</button>
     <button onclick="redo()">Redo</button>
