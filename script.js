@@ -260,24 +260,24 @@ function updatePieceImages(pieceType) {
       {url: "./images/wormhole_many.png", alt: "Wormhole Network"}
     ],
   [pieces.BlackHole]: [
-      {url: "./images/black_hole_effect.png", alt: "Wormhole Teleportation"},
+      {url: "./images/black_hole_effect.png", alt: "Black Hole Effect"},
     ],
   [pieces.WhiteHole]: [
-      {url: "./images/white_hole_effect.png", alt: "Wormhole Teleportation"},
+      {url: "./images/white_hole_effect.png", alt: "White Hole Effect"},
     ],
   [pieces.Fluctuator]: [
-      {url: "./images/fluctuator_rook_mode.png", alt: "Wormhole Teleportation"},
-      {url: "./images/fluctuator_bishop_mode.png", alt: "Wormhole Network"}
+      {url: "./images/fluctuator_rook_mode.png", alt: "Fluctuator rook-mode"},
+      {url: "./images/fluctuator_bishop_mode.png", alt: "Fluctuator bishop-mode"}
     ],
   [pieces.Supernova]: [
-      {url: "./images/supernova_trigger.png", alt: "Wormhole Teleportation"},
-      {url: "./images/supernova_explosion.png", alt: "Wormhole Network"}
+      {url: "./images/supernova_trigger.png", alt: "Supernova trigger button"},
+      {url: "./images/supernova_explosion.png", alt: "Supernova explosion"}
     ],
 [pieces.Photon]: [
-      {url: "./images/photon.png", alt: "Wormhole Teleportation"},
+      {url: "./images/photon.png", alt: "Photon Reflection"},
     ],
 [pieces.Queen]: [
-      {url: "./images/queen.png", alt: "Wormhole Teleportation"},
+      {url: "./images/queen.png", alt: "da queen lil bro, do you not know what the damn queen does?! lmao"},
     ],
 
     // Add more for other pieces...
