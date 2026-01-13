@@ -262,6 +262,25 @@ function wouldEnterWhiteHoleRadius(endR, endC, piece) {
   return true;
 }
 
+function isInEnemySupernovaExplosionRadius(r, c, color) {
+  for (let sr = 0; sr < SIZE; sr++) {
+    for (let sc = 0; sc < SIZE; sc++) {
+      const piece = board[sr][sc];
+      if (piece && 
+          piece.type === pieces.Supernova && 
+          piece.color !== color) {
+        const explosionRadius = getExplosionRadius(sr, sc);
+        for (const pos of explosionRadius) {
+          if (pos.r === r && pos.c === c) {
+            return true;
+          }
+        }
+      }
+    }
+  }
+  return false;
+}
+
 // ================= SUPERNOVA =================
 function getExplosionRadius(r, c) {
   const affected = [];
@@ -471,6 +490,12 @@ function getTeleportExits(piecePos, wormholePos, piece) {
     
     const targetPiece = board[exitRow][exitCol];
     if (targetPiece && targetPiece.color === piece.color) continue;
+    
+    // BUG FIX 2: Check if exit square is under enemy white hole influence
+    // Queen is immune, but other pieces are not
+    if (piece.type !== pieces.Queen && isInWhiteHoleRadius(exitRow, exitCol, piece.color)) {
+      continue;
+    }
     
     exits.push({
       r: exitRow,
@@ -1115,18 +1140,9 @@ function king(r, c, color, isKingPiece) {
         let canMove = true;
         
         if (isKingPiece) {
-          for (let sr = 0; sr < SIZE; sr++) {
-            for (let sc = 0; sc < SIZE; sc++) {
-              const p = board[sr][sc];
-              if (p && p.type === pieces.Supernova && p.color !== color) {
-                const dist = Math.max(Math.abs(nr - sr), Math.abs(nc - sc));
-                if (dist <= 2) {
-                  canMove = false;
-                  break;
-                }
-              }
-            }
-            if (!canMove) break;
+          // BUG FIX 1: Check actual explosion radius instead of Manhattan distance
+          if (isInEnemySupernovaExplosionRadius(nr, nc, color)) {
+            canMove = false;
           }
         }
         
@@ -1204,13 +1220,16 @@ function isKingInCheck(color) {
         if (getRawMoves(r, c, board[r][c]).some(m => m.r === k.r && m.c === k.c))
           return true;
   
+  // BUG FIX 1: Also use the actual explosion radius for check detection
   for (let r = 0; r < SIZE; r++) {
     for (let c = 0; c < SIZE; c++) {
       const p = board[r][c];
       if (p && p.type === pieces.Supernova && p.color !== color) {
-        const dist = Math.max(Math.abs(k.r - r), Math.abs(k.c - c));
-        if (dist <= 2) {
-          return true;
+        const explosionRadius = getExplosionRadius(r, c);
+        for (const pos of explosionRadius) {
+          if (pos.r === k.r && pos.c === k.c) {
+            return true;
+          }
         }
       }
     }
