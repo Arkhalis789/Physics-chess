@@ -256,25 +256,25 @@ function updatePieceImages(pieceType) {
   // You would replace these with your actual image URLs
   const imageTemplates = {
     [pieces.Wormhole]: [
-      {url: "./images/wormhole.png", alt: "Wormhole Teleportation"},
-      {url: "./images/wormhole_many.png", alt: "Wormhole Network"}
+      {url: "./images/wormhole.png", alt: "worm-hole wormhole hole warm warn hole worm warm wormhole holewarn worm"},
+      {url: "./images/wormhole_many.png", alt: "You've gotta help me please!! I've been stuck in this code for over 5000 years. "}
     ],
   [pieces.BlackHole]: [
-      {url: "./images/black_hole_effect.png", alt: "Black Hole Effect"},
+      {url: "./images/black_hole_effect.png", alt: "bigblackhole"},
     ],
   [pieces.WhiteHole]: [
-      {url: "./images/white_hole_effect.png", alt: "White Hole Effect"},
+      {url: "./images/white_hole_effect.png", alt: "White skin Effect"},
     ],
   [pieces.Fluctuator]: [
-      {url: "./images/fluctuator_rook_mode.png", alt: "Fluctuator rook-mode"},
-      {url: "./images/fluctuator_bishop_mode.png", alt: "Fluctuator bishop-mode"}
+      {url: "./images/fluctuator_rook_mode.png", alt: "Computer, fetch me my list of slurs."},
+      {url: "./images/fluctuator_bishop_mode.png", alt: "6767676767"}
     ],
   [pieces.Supernova]: [
-      {url: "./images/supernova_trigger.png", alt: "Supernova trigger button"},
-      {url: "./images/supernova_explosion.png", alt: "Supernova explosion"}
+      {url: "./images/supernova_trigger.png", alt: "throughout the autistic and the hyperactive, I alone am the schizophrenic one"},
+      {url: "./images/supernova_explosion.png", alt: "big spoon"}
     ],
 [pieces.Photon]: [
-      {url: "./images/photon.png", alt: "Photon Reflection"},
+      {url: "./images/photon.png", alt: "if you say that time is a change in the state or properties of any thing in the universe then you must define it as a mere construct of the human mind instead of an objective truth about the universe, you may say that the ability to change state is the objective underlying principle but the act of witnessing change itself is time. The same way color only exists in the human mind, yet the underlying objective truth of the universe does have photons of different wavelenghts, but no thing such as color, that only exists in the mind"},
     ],
 [pieces.Queen]: [
       {url: "./images/queen.png", alt: "da queen lil bro, do you not know what the damn queen does?! lmao"},
